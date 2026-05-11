@@ -1,0 +1,67 @@
+from flask import Flask, render_template
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route('/')
+
+def dashboard():
+
+    conn = sqlite3.connect("retail_ai.db")
+
+    cursor = conn.cursor()
+
+    # Get latest analytics
+    cursor.execute("""
+
+    SELECT
+        people_count,
+        entry_count,
+        exit_count,
+        inside_count
+
+    FROM analytics
+
+    ORDER BY id DESC
+
+    LIMIT 1
+
+    """)
+
+    data = cursor.fetchone()
+
+    if data:
+
+        people_count = data[0]
+        entry_count = data[1]
+        exit_count = data[2]
+        inside_count = data[3]
+
+    else:
+
+        people_count = 0
+        entry_count = 0
+        exit_count = 0
+        inside_count = 0
+
+    # Total database entries
+    cursor.execute("SELECT COUNT(*) FROM analytics")
+
+    total_entries = cursor.fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+
+        "index.html",
+
+        people_count=people_count,
+        entry_count=entry_count,
+        exit_count=exit_count,
+        inside_count=inside_count,
+        total_entries=total_entries
+
+    )
+
+if __name__ == "__main__":
+    app.run(debug=True)
