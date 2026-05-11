@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Smart Retail AI Dashboard</title>
+
+    <meta http-equiv="refresh" content="2">
+
+    <style>
+
+        body{
+            background:#0f0f0f;
+            color:white;
+            font-family:Arial;
+            text-align:center;
+            margin:0;
+            padding:0;
+        }
+
+        h1{
+            color:cyan;
+            margin-top:30px;
+        }
+
+        .container{
+            display:flex;
+            justify-content:center;
+            flex-wrap:wrap;
+            gap:20px;
+            margin-top:40px;
+        }
+
+        .card{
+            background:#1e1e1e;
+            width:250px;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 0 15px rgba(0,255,255,0.3);
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform:scale(1.05);
+        }
+
+        .card h2{
+            margin-bottom:15px;
+            color:#00ffff;
+        }
+
+        .number{
+            font-size:40px;
+            font-weight:bold;
+        }
+
+        .video-section{
+            margin-top:50px;
+            margin-bottom:50px;
+        }
+
+        .video-section img{
+            border-radius:15px;
+            border:3px solid cyan;
+            box-shadow:0 0 20px rgba(0,255,255,0.5);
+            width:900px;
+            max-width:95%;
+        }
+
+        .chart-container{
+            width:80%;
+            margin:auto;
+            margin-bottom:50px;
+        }
+
+        canvas{
+            background:#1e1e1e;
+            border-radius:15px;
+            padding:20px;
+        }
+
+        footer{
+            margin-top:40px;
+            margin-bottom:20px;
+            color:gray;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Smart Retail AI Dashboard</h1>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>Live People Count</h2>
+            <div class="number">{{ people_count }}</div>
+        </div>
+
+        <div class="card">
+            <h2>Entered</h2>
+            <div class="number">{{ entry_count }}</div>
+        </div>
+
+        <div class="card">
+            <h2>Exited</h2>
+            <div class="number">{{ exit_count }}</div>
+        </div>
+
+        <div class="card">
+            <h2>Inside Store</h2>
+            <div class="number">{{ inside_count }}</div>
+        </div>
+
+        <div class="card">
+            <h2>Total DB Entries</h2>
+            <div class="number">{{ total_entries }}</div>
+        </div>
+
+    </div>
+
+    <div class="video-section">
+
+        <h1>Live AI Camera Feed</h1>
+
+        <img src="{{ url_for('video_feed') }}">
+
+    </div>
+
+    <div class="chart-container">
+
+        <h1>Live Visitor Analytics</h1>
+
+        <canvas id="peopleChart"></canvas>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+    const ctx = document.getElementById('peopleChart');
+
+    new Chart(ctx, {
+
+        type: 'line',
+
+        data: {
+
+            labels: [
+                '1','2','3','4','5',
+                '6','7','8','9','10'
+            ],
+
+            datasets: [{
+
+                label: 'People Count',
+
+                data: {{ chart_data | safe }},
+
+                borderColor: 'cyan',
+
+                backgroundColor: 'rgba(0,255,255,0.2)',
+
+                tension: 0.4,
+
+                fill: true
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+                    labels: {
+                        color: 'white'
+                    }
+                }
+
+            },
+
+            scales: {
+
+                x: {
+                    ticks: {
+                        color: 'white'
+                    }
+                },
+
+                y: {
+                    ticks: {
+                        color: 'white'
+                    }
+                }
+
+            }
+
+        }
+
+    });
+
+    </script>
+
+    <footer>
+
+        Smart Retail AI Analytics System
+
+    </footer>
+
+</body>
+
+</html>
